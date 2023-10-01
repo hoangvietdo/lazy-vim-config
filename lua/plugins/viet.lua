@@ -353,7 +353,7 @@ return {
           section_separators = { left = "", right = "" },
           component_separators = { left = "", right = "" },
           globalstatus = true,
-          disabled_filetypes = { statusline = { "dashboard", "alpha" } },
+          disabled_filetypes = { statusline = { "dashboard", "alpha", "TelescopePrompt" } },
         },
         sections = {
           lualine_a = {
@@ -365,7 +365,7 @@ return {
             },
           },
           lualine_y = {
-            { "progress", separator = " ",                  padding = { left = 1, right = 0 } },
+            { "progress", separator = " ", padding = { left = 1, right = 0 } },
             { "location", padding = { left = 0, right = 1 } },
             {
               function()
