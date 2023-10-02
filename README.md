@@ -11,3 +11,9 @@ nvim
 mv -v ~/Videos/*.lua ~/.config/nvim/lua/plugins/
 nvim
 ```
+
+## Requirements
+```
+sudo apt install cargo
+cargo install --locked code-minimap
+```
