@@ -120,6 +120,13 @@ return {
         end,
       },
     },
+
+    init = function()
+      local keys = require("lazyvim.plugins.lsp.keymaps").get()
+      -- add keymap for "change source/header"
+      keys[#keys + 1] = { "gh", "<cmd>ClangdSwitchSourceHeader<cr>", desc = "Switch Source/Header" }
+    end,
+
     ---@class PluginLspOpts
     opts = {
       -- options for vim.diagnostic.config()
@@ -306,16 +313,23 @@ return {
         end)
       end
 
-      local cmp_nvim_lsp = require "cmp_nvim_lsp"
+      local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
-      require("lspconfig").clangd.setup {
+      require("lspconfig").clangd.setup({
         on_attach = on_attach,
         capabilities = cmp_nvim_lsp.default_capabilities(),
         cmd = {
           "clangd",
           "--offset-encoding=utf-16",
+          "--background-index",
+          "--clang-tidy",
+          "--header-insertion=iwyu",
+          "--completion-style=detailed",
+          "--function-arg-placeholders",
+          "--fallback-style=llvm",
+          "--header-insertion=never",
         },
-      }
+      })
     end,
   },
 
@@ -331,14 +345,11 @@ return {
         "bash",
         "json",
         "lua",
-        "markdown",
-        "markdown_inline",
         "python",
-        "query",
         "regex",
-        "tsx",
         "vim",
         "yaml",
+        "ros",
       },
     },
   },
@@ -365,7 +376,7 @@ return {
             },
           },
           lualine_y = {
-            { "progress", separator = " ", padding = { left = 1, right = 0 } },
+            { "progress", padding = { left = 1, right = 0 }, separator = " " },
             { "location", padding = { left = 0, right = 1 } },
             {
               function()
@@ -376,8 +387,11 @@ return {
             { "searchcount", maxcount = 999, timeout = 500 },
           },
           lualine_z = {
-            "os.date('%a (%j/365)')",
-            "os.date('%b %d, %Y')",
+            -- "os.date('%a (%j/365)')",
+            function()
+              return " " .. os.date("%b %d(%a), %Y")
+            end,
+            -- "os.date('%b %d, %Y')",
             function()
               return " " .. os.date("%T %Z")
             end,
@@ -509,18 +523,63 @@ return {
       }
     end,
   },
-  
+
   {
     "wfxr/minimap.vim",
     lazy = false,
     cmd = { "Minimap", "MinimapClose", "MinimapToggle", "MinimapRefresh", "MinimapUpdateHighlight" },
     init = function()
-        vim.cmd("let g:minimap_width = 10")
-        vim.cmd("let g:minimap_auto_start = 1")
-        vim.cmd("let g:minimap_auto_start_win_enter = 1")
+      vim.cmd("let g:minimap_width = 5")
+      vim.cmd("let g:minimap_auto_start = 1")
+      vim.cmd("let g:minimap_auto_start_win_enter = 1")
     end,
   },
-  
+
+  {
+    "akinsho/bufferline.nvim",
+    event = "VeryLazy",
+    keys = {
+      { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>",            desc = "Toggle pin" },
+      { "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete non-pinned buffers" },
+    },
+    opts = {
+      options = {
+        -- stylua: ignore
+        close_command = function(n) require("mini.bufremove").delete(n, false) end,
+        -- stylua: ignore
+        right_mouse_command = function(n) require("mini.bufremove").delete(n, false) end,
+
+        buffer_close_icon = "󰅖",
+        modified_icon = "●",
+        close_icon = "",
+        diagnostics = "nvim_lsp",
+        always_show_bufferline = false,
+        diagnostics_indicator = function(_, _, diag)
+          local icons = require("lazyvim.config").icons.diagnostics
+          local ret = (diag.error and icons.Error .. diag.error .. " " or "")
+              .. (diag.warning and icons.Warn .. diag.warning or "")
+          return vim.trim(ret)
+        end,
+        offsets = {
+          {
+            filetype = "neo-tree",
+            text = "Neo-tree",
+            highlight = "Directory",
+            text_align = "left",
+          },
+        },
+      },
+    },
+  },
+
+  {
+    "tadachs/ros-nvim",
+    config = function()
+      require("ros-nvim").setup({ only_workspace = true })
+    end,
+    dependencies = { "nvim-lua/plenary.nvim" },
+  },
+
   {
     "goolord/alpha-nvim",
     opts = function()
