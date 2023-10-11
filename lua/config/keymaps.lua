@@ -8,7 +8,6 @@ local delmap = vim.keymap.del
 
 setmap("n", "j", "jzz")
 setmap("n", "k", "kzz")
-setmap("n", "<leader>w", "<cmd>w<cr><esc>", opts)
 
 delmap("n", "<leader>ww")
 delmap("n", "<leader>wd")
