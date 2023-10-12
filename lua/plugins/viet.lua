@@ -485,9 +485,20 @@ return {
 
   {
     "numToStr/Comment.nvim",
-    opts = function()
-      require("Comment").setup()
-    end,
+    opts = {
+      toggler = {
+        -- Line-comment toggle keymap
+        line = "<leader>a",
+        -- Block-comment toggle keymap
+        -- block = "<leader>a",
+      },
+      opleader = {
+        ---Line-comment keymap
+        line = "<leader>a",
+        -- -Block-comment keymap
+        -- block = "<leader>a",
+      },
+    },
     lazy = false,
   },
 
