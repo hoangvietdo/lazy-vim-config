@@ -511,13 +511,13 @@ return {
     end,
   },
 
-  {
-    "echasnovski/mini.indentscope",
-    opts = {
-      symbol = ".",
-      options = { try_as_border = true },
-    },
-  },
+  -- {
+  --   "echasnovski/mini.indentscope",
+  --   opts = {
+  --     symbol = ".",
+  --     options = { try_as_border = true },
+  --   },
+  -- },
 
   {
     "nvimtools/none-ls.nvim",
