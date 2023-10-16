@@ -1,4 +1,7 @@
 return {
+  {
+    "LazyVim/LazyVim", version = "v9.9.1",
+  },
   -- add catppuccin
   {
     "catppuccin/nvim",
